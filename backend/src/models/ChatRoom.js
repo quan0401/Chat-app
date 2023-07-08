@@ -8,7 +8,14 @@ const ChatRoomSchema = new Schema({
     default:
       "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
   },
-  member: [{ type: Schema.Types.ObjectId, nickName: String, ref: "User" }],
+  member: [
+    {
+      type: Schema.Types.ObjectId,
+      nickName: String,
+      ref: "User",
+      unique: true,
+    },
+  ],
   message: [{ type: Schema.Types.ObjectId, ref: "Message" }],
 });
 const ChatRoom = mongoose.model("ChatRoom", ChatRoomSchema);
