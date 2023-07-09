@@ -1,3 +1,4 @@
+const apiRoutes = require("./routes/apiRoutes");
 const importData = require("./seeder/seeder");
 const express = require("express");
 const connectDb = require("./config/connectDb");
@@ -18,6 +19,9 @@ app.get("/", (req, res) => {
   res.send("hello");
 });
 
+// api
+app.use("/api", apiRoutes);
+
 // seeder
 // importData();
 connectDb();
@@ -26,7 +30,13 @@ connectDb();
 app.use((err, req, res, next) => {
   console.error(err.stack);
   console.log(err.message);
-  res.status(500).send("Something broke!");
+  res.status(500).send({
+    EC: -1,
+    message: {
+      stack: err.stack,
+      message: err.message,
+    },
+  });
 });
 
 const port = 3000;
