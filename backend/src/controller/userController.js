@@ -1,5 +1,7 @@
 const User = require("../models/UserModel");
 const { hashPassword, comparePassword } = require("../utils/hashPassword");
+const { generateAuthToken } = require("../utils/jwt");
+require("dotenv").config();
 
 const registerUser = async (req, res, next) => {
   try {
@@ -22,6 +24,12 @@ const registerUser = async (req, res, next) => {
       email,
       password: hashPassword(password),
     });
+    const cookieParams = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    };
+
+    res.cookie("access_token", generateAuthToken(user), cookieParams);
     await user.save();
     return res.status(201).send({
       EC: 0,
@@ -38,27 +46,41 @@ const loginUser = async (req, res, next) => {
     const email = req.body.email || "";
     if ((!name && !email) || !password) res.status(400).send("Missing fields");
 
-    User.findOne({ $or: [{ email }, { name }] })
+    const user = await User.findOne({ $or: [{ email }, { name }] })
       .select("-__v ")
-      .then((user) => {
-        if (!comparePassword(password, user.password))
-          return res.status(400).send({ EC: 0, message: "Wrong credentials" });
+      .orFail();
 
-        const userData = JSON.parse(JSON.stringify(user));
-        delete userData.password;
+    if (!comparePassword(password, user.password))
+      return res.status(400).send({ EC: 0, message: "Wrong credentials" });
 
-        return res.status(200).send({
-          EC: 0,
-          message: "Logined",
-          data: {
-            user: userData,
-          },
-        });
-      })
-      .catch((error) => console.log(error));
+    const userData = JSON.parse(JSON.stringify(user));
+    delete userData.password;
+
+    const cookieParams = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    };
+
+    res.cookie("access_token", generateAuthToken(userData), cookieParams);
+
+    return res.status(200).send({
+      EC: 0,
+      message: "Logined",
+      data: {
+        user: userData,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const userTest = (req, res, next) => {
+  try {
+    console.log(req.user);
+    return res.status(200).send(req.user);
   } catch (error) {
     next(error);
   }
 };
 
-module.exports = { registerUser, loginUser };
+module.exports = { registerUser, loginUser, userTest };
