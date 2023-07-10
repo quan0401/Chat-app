@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 
-import { Container, Button, Col, Form, Row } from "react-bootstrap";
+import { Container, Button, Col, Form, Row, Alert } from "react-bootstrap";
 
 import { useNavigate } from "react-router-dom";
 
 import { loginUser, testUser } from "../services/userServices";
 
+import { useDispatch, useSelector } from "react-redux";
+import { userLoginAction } from "../redux/actions/userActions";
+
 function LoginPage() {
   const [validated, setValidated] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -18,7 +24,9 @@ function LoginPage() {
     const {
       password: { value: passwordValue },
       username: { value: usernameValue },
+      doNotLogout: { checked: doNotLogout },
     } = form.elements;
+    console.log(doNotLogout);
 
     if (
       form.checkValidity() === true &&
@@ -26,18 +34,14 @@ function LoginPage() {
       usernameValue.trim() !== "" &&
       passwordValue.trim() !== ""
     ) {
-      loginUser(usernameValue, passwordValue).then((res) => {
-        console.log(res);
-        setValidated(!validated);
-      });
+      loginUser(usernameValue, passwordValue, doNotLogout)
+        .then((res) => {
+          navigate("/homepage", { replace: true });
+          dispatch(userLoginAction(res.data.user));
+        })
+        .catch((error) => setErrorMessage(error.message));
     }
   };
-
-  useEffect(() => {
-    testUser().then((res) => {
-      console.log("test", res);
-    });
-  }, [validated]);
 
   return (
     <Container
@@ -91,6 +95,7 @@ function LoginPage() {
                 label="Do not logout"
                 feedback="You must agree before submitting."
                 feedbackType="invalid"
+                name="doNotLogout"
               />
             </Form.Group>
             <p>
@@ -100,8 +105,21 @@ function LoginPage() {
               </a>{" "}
             </p>
 
-            <Button className="btn1" type="submit">
+            <Button className="btn1 position-relative" type="submit">
               Login
+              {errorMessage && (
+                <Alert
+                  className="mt-3 position-absolute"
+                  style={{
+                    width: 400,
+                    left: 0,
+                    pointerEvents: "none",
+                  }}
+                  variant="danger"
+                >
+                  {errorMessage}
+                </Alert>
+              )}
             </Button>
           </Form>
         </div>

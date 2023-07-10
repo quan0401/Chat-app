@@ -11,8 +11,12 @@ const registerUser = async (req, res, next) => {
         EC: 1,
         message: "All fields are required",
       });
-    const email = userEmail || "";
-    const userExisted = await User.findOne({ $or: [{ name }, { email }] });
+    const email = userEmail || null;
+    const query = [{ name }];
+    if (email !== null) query.push({ email });
+
+    const userExisted = await User.findOne({ $or: query });
+    console.log(userExisted);
     if (userExisted)
       return res.status(400).send({
         EC: 1,
@@ -24,12 +28,11 @@ const registerUser = async (req, res, next) => {
       email,
       password: hashPassword(password),
     });
-    const cookieParams = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-    };
-
-    res.cookie("access_token", generateAuthToken(user), cookieParams);
+    // const cookieParams = {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    // };
+    // res.cookie("access_token", generateAuthToken(user), cookieParams);
     await user.save();
     return res.status(201).send({
       EC: 0,
@@ -42,7 +45,7 @@ const registerUser = async (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
   try {
-    const { name, password } = req.body;
+    const { name, password, doNotLogout } = req.body;
     const email = req.body.email || "";
     if ((!name && !email) || !password) res.status(400).send("Missing fields");
 
@@ -60,6 +63,7 @@ const loginUser = async (req, res, next) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
     };
+    if (doNotLogout) cookieParams["maxAge"] = 60 * 60 * 1000;
 
     res.cookie("access_token", generateAuthToken(userData), cookieParams);
 

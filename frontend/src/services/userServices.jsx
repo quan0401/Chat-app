@@ -1,10 +1,11 @@
 import axiosInstance from "../setup/axios";
 
-export const loginUser = async (acc, password) => {
+export const loginUser = async (acc, password, doNotLogout) => {
   return await axiosInstance.post("/api/user/login", {
     email: acc,
     name: acc,
     password,
+    doNotLogout,
   });
 };
 export const registerUser = async (username, email, password) => {

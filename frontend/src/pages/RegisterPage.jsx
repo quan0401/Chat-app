@@ -1,11 +1,18 @@
 import { useState } from "react";
-
-import { Container, Button, Col, Form, InputGroup, Row } from "react-bootstrap";
-
+import {
+  Container,
+  Button,
+  Col,
+  Form,
+  InputGroup,
+  Row,
+  Alert,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../services/userServices";
 
 function RegisterPage() {
+  const [errorMessage, setErrorMessage] = useState("");
   const [validated, setValidated] = useState(false);
 
   const navigate = useNavigate();
@@ -27,9 +34,14 @@ function RegisterPage() {
       username.trim() !== "" &&
       password.trim() !== ""
     ) {
-      registerUser(username, email, password).then((res) => {
-        console.log(res);
-      });
+      registerUser(username, email, password)
+        .then((res) => {
+          console.log(res);
+          navigate("/login", { replace: true });
+        })
+        .catch((error) => {
+          setErrorMessage(error.message);
+        });
     }
 
     setValidated(true);
@@ -100,13 +112,6 @@ function RegisterPage() {
               </Form.Group>
             </Row>
 
-            <Form.Group className="mb-3">
-              <Form.Check
-                label="Do not logout"
-                feedback="You must agree before submitting."
-                feedbackType="invalid"
-              />
-            </Form.Group>
             <p>
               Already have an account?{" "}
               <a onClick={() => navigate("/login")} className="a">
@@ -114,8 +119,21 @@ function RegisterPage() {
               </a>{" "}
             </p>
 
-            <Button className="btn1" type="submit">
+            <Button className="btn1 position-relative" type="submit">
               Register
+              {errorMessage && (
+                <Alert
+                  className="mt-3 position-absolute"
+                  style={{
+                    width: 400,
+                    left: 0,
+                    pointerEvents: "none",
+                  }}
+                  variant="danger"
+                >
+                  {errorMessage}
+                </Alert>
+              )}
             </Button>
           </Form>
         </div>
