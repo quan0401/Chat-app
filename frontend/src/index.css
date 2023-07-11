@@ -70,3 +70,34 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.custom-input {
+  color: white;
+  border: none;
+  box-shadow: none;
+}
+
+.custom-input::placeholder {
+  color: #9a9d9f;
+  border: none;
+}
+
+.custom-input:focus {
+  border-color: #9a9d9f;
+  /* Border color on focus */
+  box-shadow: none;
+  /* Optional: remove box shadow on focus */
+}
+
+.chat-list-item:hover {
+  background-color: #2e343d;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.text-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #84888d;
+}

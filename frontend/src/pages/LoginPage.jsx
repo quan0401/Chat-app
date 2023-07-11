@@ -26,7 +26,6 @@ function LoginPage() {
       username: { value: usernameValue },
       doNotLogout: { checked: doNotLogout },
     } = form.elements;
-    console.log(doNotLogout);
 
     if (
       form.checkValidity() === true &&
