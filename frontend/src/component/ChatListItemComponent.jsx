@@ -22,7 +22,7 @@ function ChatListItemComponent() {
           }}
         >
           <Image
-            src="/public/img/ava.jpg"
+            src="/img/ava.jpg"
             className="object-fit-cover"
             style={{
               height: "60px",

@@ -31,7 +31,7 @@ function MessageComponent({
             borderRadius: "50%",
             marginRight: 12,
           }}
-          src="/public/img/ava.jpg"
+          src="/img/ava.jpg"
         />
       )}
       <div
@@ -73,7 +73,7 @@ function MessageComponent({
               borderRadius: "50%",
               marginRight: 4,
             }}
-            src="/public/img/ava.jpg"
+            src="/img/ava.jpg"
           />
           <Image
             style={{
@@ -82,7 +82,7 @@ function MessageComponent({
               objectFit: "cover",
               borderRadius: "50%",
             }}
-            src="/public/img/ava.jpg"
+            src="/img/ava.jpg"
           />
           <Image
             style={{
@@ -92,7 +92,7 @@ function MessageComponent({
               borderRadius: "50%",
               marginRight: 4,
             }}
-            src="/public/img/ava.jpg"
+            src="/img/ava.jpg"
           />
           <Image
             style={{
@@ -101,7 +101,7 @@ function MessageComponent({
               objectFit: "cover",
               borderRadius: "50%",
             }}
-            src="/public/img/ava.jpg"
+            src="/img/ava.jpg"
           />
         </div>
       )}

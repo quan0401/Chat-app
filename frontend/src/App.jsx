@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import publicRoutes from "./routes/publicRoutes";
+import { socket } from "./socket";
 
 function App() {
   return (

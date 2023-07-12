@@ -4,18 +4,19 @@ const express = require("express");
 const connectDb = require("./config/connectDb");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
-const cors = require("cors");
+const socketIO = require("./socket");
 
 const app = express();
+// socket
+
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const httpServer = createServer(app);
+global.io = new Server(httpServer);
+
+socketIO();
 
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: "http://127.0.0.1:5173",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-  })
-);
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -48,6 +49,6 @@ app.use((err, req, res, next) => {
 });
 
 const port = 3000;
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log("App is running on port: ", port);
 });

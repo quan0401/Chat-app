@@ -26,7 +26,7 @@ function ChatRoomBodyComponent() {
   return (
     <div
       className="w-100 position-relative"
-      style={{ overflow: "auto", height: "94vh" }}
+      style={{ overflow: "auto", height: "90vh" }}
     >
       {/* Text input */}
       <div
