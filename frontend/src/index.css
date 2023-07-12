@@ -8,6 +8,12 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  /* My custom */
+  --secondary: #9a9d9f;
+  --message-input-height: 48px;
+  --chatBox-text-color: #dee9ff;
+  --primary-color: #6a8bfc;
+  --third: #2e343d;
 }
 
 .a {
@@ -83,7 +89,7 @@ button:focus-visible {
 }
 
 .custom-input:focus {
-  border-color: #9a9d9f;
+  border-color: var(--secondary);
   /* Border color on focus */
   box-shadow: none;
   /* Optional: remove box shadow on focus */
@@ -99,5 +105,41 @@ button:focus-visible {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #84888d;
+  color: var(--secondary);
+}
+
+.flip {
+  transform: scale(-1, 1);
+  color: #1c87c9;
+  -moz-transform: scale(-1, 1);
+  -webkit-transform: scale(-1, 1);
+  -o-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  transform: scale(-1, 1);
+}
+
+.secondary {
+  color: var(--secondary) !important;
+}
+
+.stick-bottom {
+  position: fixed;
+  top: calc(100% - var(--message-input-height));
+  z-index: 1;
+}
+
+.my-vh-100 {
+  height: calc(100% - var(--message-input-height) - 18px);
+}
+
+.my-text-primary {
+  color: var(--chatBox-text-color);
+}
+
+.my-bg-primary-color {
+  background-color: var(--primary-color);
+}
+
+.my-bg-third-color {
+  background-color: var(--third);
 }

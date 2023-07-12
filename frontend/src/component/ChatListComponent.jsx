@@ -5,23 +5,15 @@ import ChatListItemComponent from "./ChatListItemComponent";
 
 function ChatListComponent() {
   return (
-    <Container
-      fluid
-      style={{
-        maxWidth: "400px",
-      }}
-    >
+    <Container fluid>
       <div
         className="d-flex rounded-pill align-items-center mb-3"
         style={{
           backgroundColor: "#2e343d",
+          cursor: "pointer",
         }}
       >
-        <FontAwesomeIcon
-          color="#9a9d9f"
-          className="ms-3"
-          icon={faMagnifyingGlass}
-        />
+        <FontAwesomeIcon className="ms-3 secondary" icon={faMagnifyingGlass} />
 
         <Form.Control
           className="custom-input text-white"
@@ -33,9 +25,17 @@ function ChatListComponent() {
           placeholder="Search"
         />
       </div>
-      <div>
-        <ChatListItemComponent />
-        <ChatListItemComponent />
+      <div
+        style={{
+          height: "100vh",
+          overflowY: "auto",
+          overflowX: "hidden",
+          // backgroundColor: "blue",
+        }}
+      >
+        {Array.from({ length: 100 }).map((item, index) => (
+          <ChatListItemComponent key={index} />
+        ))}
       </div>
     </Container>
   );
