@@ -1,16 +1,20 @@
 import { Outlet, Navigate } from "react-router-dom";
-
+import { useEffect, useState } from "react";
 import axiosInstance from "../setup/axios";
 
+// Component canot return <Navigate to="/login" replace={true} />
 function ProtectedRoutes() {
-  let valid = true;
+  const [isAuth, setIsAuth] = useState();
+  useEffect(() => {
+    axiosInstance.get("api/get-token").then((res) => {
+      setIsAuth(res.data._id);
+    });
+  }, [isAuth]);
 
-  axiosInstance.get("api/get-token").then((res) => {
-    const { _id, name } = res.data;
-    valid = name && _id ? true : false;
-  });
+  // If you remove this line it won't work as expected
+  if (isAuth === undefined) return null;
 
-  return valid ? <Outlet /> : Navigate({ to: "/login", replace: true });
+  return isAuth ? <Outlet /> : <Navigate to="/login" replace={true} />;
 }
 
 export default ProtectedRoutes;

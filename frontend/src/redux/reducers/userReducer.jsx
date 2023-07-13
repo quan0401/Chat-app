@@ -4,7 +4,7 @@ const userData = JSON.parse(sessionStorage.getItem("userData"))
   : JSON.parse(localStorage.getItem("userData"));
 
 const initialState = {
-  userData: userData ? userData : { name: "unknown" },
+  userData: userData ? userData : {},
 };
 
 const userReducer = (state = initialState, action) => {
@@ -12,7 +12,7 @@ const userReducer = (state = initialState, action) => {
     case userConstants.LOGIN: {
       return {
         ...state,
-        ...action.payload,
+        userData: action.payload,
       };
     }
     case userConstants.LOGOUT: {
@@ -20,6 +20,7 @@ const userReducer = (state = initialState, action) => {
         name: "unknown",
       };
     }
+
     default: {
       return state;
     }
