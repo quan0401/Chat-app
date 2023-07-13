@@ -1,6 +1,6 @@
 const connectDb = require("../config/connectDb");
 const User = require("../models/UserModel");
-const ChatRoom = require("../models/ChatRoom");
+const ChatRoom = require("../models/ChatRoomModel");
 const Message = require("../models/MessageModel");
 
 const importData = async () => {

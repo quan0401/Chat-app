@@ -27,6 +27,7 @@ function App() {
             );
           })}
         </Route>
+        <Route path="*" element={<h1>No link</h1>} />
       </Routes>
     </Router>
   );

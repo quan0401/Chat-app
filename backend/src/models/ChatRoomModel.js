@@ -9,7 +9,7 @@ const ChatRoomSchema = new Schema(
       default:
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
     },
-    member: [
+    members: [
       {
         type: Schema.Types.ObjectId,
         nickName: String,
@@ -17,7 +17,8 @@ const ChatRoomSchema = new Schema(
         unique: true,
       },
     ],
-    message: [{ type: Schema.Types.ObjectId, ref: "Message" }],
+    messages: [{ type: Schema.Types.ObjectId, ref: "Message" }],
+    lastMessage: { type: Schema.Types.ObjectId, ref: "Message" },
   },
   {
     timestamps: true,

@@ -1,3 +1,4 @@
+const ChatRoom = require("../models/ChatRoomModel");
 const User = require("../models/UserModel");
 const { hashPassword, comparePassword } = require("../utils/hashPassword");
 const { generateAuthToken } = require("../utils/jwt");
@@ -16,7 +17,7 @@ const registerUser = async (req, res, next) => {
     if (email !== null) query.push({ email });
 
     const userExisted = await User.findOne({ $or: query });
-    console.log(userExisted);
+
     if (userExisted)
       return res.status(400).send({
         EC: 1,
@@ -51,9 +52,12 @@ const loginUser = async (req, res, next) => {
 
     const user = await User.findOne({ $or: [{ email }, { name }] })
       .select("-__v ")
+      .populate("chatRooms")
       .orFail();
 
-    if (!comparePassword(password, user.password))
+    console.log(user);
+
+    if (!comparePassword(password, user?.password ? user.password : ""))
       return res.status(400).send({ EC: 0, message: "Wrong credentials" });
 
     const userData = JSON.parse(JSON.stringify(user));
