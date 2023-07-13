@@ -1,11 +1,50 @@
-import { Container, Form, Row } from "react-bootstrap";
+import {
+  Container,
+  Form,
+  Image,
+  Row,
+  Dropdown,
+  DropdownButton,
+} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import ChatListItemComponent from "./ChatListItemComponent";
+import { useDispatch } from "react-redux";
+import { userLogoutAction } from "../redux/actions/userActions";
+import { useNavigate } from "react-router-dom";
 
 function ChatListComponent() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(userLogoutAction());
+    navigate("/login");
+  };
   return (
     <Container fluid>
+      <Row>
+        <Dropdown>
+          <Dropdown.Toggle className="bg-transparent ">
+            <div>
+              <Image
+                style={{
+                  width: 44,
+                  height: 44,
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
+                src="/img/ava.jpg"
+              />
+            </div>
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu className="my-bg-primary-color">
+            <Dropdown.Item onClick={handleLogout} className="my-hover">
+              Logout
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </Row>
       <div
         className="d-flex rounded-pill align-items-center mb-3"
         style={{

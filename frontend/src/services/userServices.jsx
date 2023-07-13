@@ -15,6 +15,9 @@ export const registerUser = async (username, email, password) => {
     password,
   });
 };
+export const logoutUser = async () => {
+  return await axiosInstance.get("api/logout");
+};
 
 export const testUser = async () => {
   return await axiosInstance.get("/api/user/test");

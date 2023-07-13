@@ -35,8 +35,13 @@ function LoginPage() {
     ) {
       loginUser(usernameValue, passwordValue, doNotLogout)
         .then((res) => {
-          navigate("/homepage", { replace: true });
-          dispatch(userLoginAction(res.data.user));
+          navigate("/home", { replace: true });
+          const userData = res.data.user;
+          if (userData.doNotLogout)
+            localStorage.setItem("userData", JSON.stringify(userData));
+          else sessionStorage.setItem("userData", JSON.stringify(userData));
+
+          dispatch(userLoginAction(userData));
         })
         .catch((error) => setErrorMessage(error.message));
     }

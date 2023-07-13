@@ -143,3 +143,12 @@ button:focus-visible {
 .my-bg-third-color {
   background-color: var(--third);
 }
+
+.my-hover {
+}
+
+/* remove dropdown arrow */
+
+.dropdown-toggle::after {
+  display: none !important;
+}
