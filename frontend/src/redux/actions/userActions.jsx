@@ -11,6 +11,9 @@ export const userLoginAction = (userData) => (dispatch, getState) => {
 export const userLogoutAction = () => async (dispatch) => {
   localStorage.removeItem("userData");
   sessionStorage.removeItem("userData");
+
+  localStorage.removeItem("chatRooms");
+  sessionStorage.removeItem("chatRooms");
   logoutUser().then((res) => {});
   dispatch({
     type: userConstants.LOGOUT,

@@ -3,45 +3,53 @@ const User = require("../models/UserModel");
 const ChatRoom = require("../models/ChatRoomModel");
 const Message = require("../models/MessageModel");
 
+const user = require("./user");
+const messages = require("./message");
+
 const importData = async () => {
   try {
     connectDb();
-    // await User.deleteMany();
-    // const result = await User.insertMany([
-    //   { name: "Gourav" },
-    //   { name: "Kartik" },
-    //   { name: "Niharika" },
-    // ]);
-    await Message.deleteMany();
-    const result = await Message.insertMany([
-      { owner: "64a928cdd5405dc3042fd802", content: "bla bla" },
-      { owner: "64a928cdd5405dc3042fd803", content: "nope nope" },
-    ]);
+    await User.deleteMany();
 
-    const chatRoom = { message: [], member: [] };
-    result.forEach((item) => {
-      chatRoom.message.push(item);
-      chatRoom.member.push(item.owner._id.toString());
+    await User.create({
+      name: "quan0401",
+      password: "$2a$10$mXa4hWGDtsvW28RvFY.Anu1RtgrYFlP/TJkSTY3fqRWT8og3rmn6G",
     });
+    await User.create({
+      name: "test",
+      password: "$2a$10$mXa4hWGDtsvW28RvFY.Anu1RtgrYFlP/TJkSTY3fqRWT8og3rmn6G",
+    });
+
+    const insertedUsers = (await User.find()).map((user) =>
+      user._id.toString()
+    );
+    console.log({ insertedUsers });
+
+    await Message.deleteMany();
+    const insertedMessages = (await Message.insertMany(messages)).map((msg) =>
+      msg._id.toString()
+    );
+    console.log({ insertedMessages });
+
     await ChatRoom.deleteMany();
-    const resultChatRoom = await ChatRoom.insertMany([chatRoom]);
+    const { _id: chatRoomId } = await ChatRoom.create({
+      members: insertedUsers,
+      messages: insertedMessages,
+      lastMessage: insertedMessages[insertedMessages.length - 1],
+    });
 
-    User.find({
-      _id: { $in: ["64a928cdd5405dc3042fd802", "64a928cdd5405dc3042fd803"] },
-    })
-      .then((users) => {
-        users.forEach((user) => {
-          // user.chatRoom.push(resultChatRoom[0]._id.toString());
-          user.chatRoom = [resultChatRoom[0]._id.toString()];
+    const foundUsers = await User.find();
+    console.log({ foundUsers });
+    foundUsers.forEach((user) => {
+      user.chatRooms = [chatRoomId];
+      user.save();
+    });
 
-          user.save().then((res) => console.log(res));
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // const foundChatRooms = await ChatRoom.find().populate("members messages");
 
-    const result1 = await ChatRoom.find().populate("message member");
+    // const testUsers = await User.findById("64afbabb5fe4db468a831887").populate(
+    //   "chatRooms"
+    // );
 
     console.log("Seeder success");
   } catch (error) {

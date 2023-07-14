@@ -12,10 +12,15 @@ import ChatListItemComponent from "./ChatListItemComponent";
 import { useDispatch } from "react-redux";
 import { userLogoutAction } from "../redux/actions/userActions";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function ChatListComponent() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { userData } = useSelector((state) => state.user);
+  const { chatRoomsData } = useSelector((state) => state.chatRoom);
+
   const handleLogout = () => {
     dispatch(userLogoutAction());
     navigate("/login");
@@ -33,7 +38,7 @@ function ChatListComponent() {
                   objectFit: "cover",
                   borderRadius: "50%",
                 }}
-                src="/img/ava.jpg"
+                src={userData?.avatar}
               />
             </div>
           </Dropdown.Toggle>
@@ -72,9 +77,22 @@ function ChatListComponent() {
           // backgroundColor: "blue",
         }}
       >
-        {Array.from({ length: 100 }).map((item, index) => (
-          <ChatListItemComponent key={index} />
-        ))}
+        {chatRoomsData.length > 0 &&
+          chatRoomsData.map((room, index) => {
+            const member = room.members.find(
+              (member) => userData._id !== member._id
+            );
+            console.log("room", room);
+            console.log("member", member);
+            return (
+              <ChatListItemComponent
+                key={index}
+                roomName={member.name}
+                lastMessage={room.lastMessage}
+                roomPhoto={member.avatar}
+              />
+            );
+          })}
       </div>
     </Container>
   );

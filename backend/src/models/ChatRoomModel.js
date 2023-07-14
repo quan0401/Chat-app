@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const ChatRoomSchema = new Schema(
   {
-    roomName: String,
+    roomName: { type: String, default: "" },
     photo: {
       type: String,
       default:
@@ -12,7 +12,7 @@ const ChatRoomSchema = new Schema(
     members: [
       {
         type: Schema.Types.ObjectId,
-        nickName: String,
+        nickName: { type: String, default: "" },
         ref: "User",
         unique: true,
       },

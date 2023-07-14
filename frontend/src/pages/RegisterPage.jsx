@@ -40,7 +40,10 @@ function RegisterPage() {
           navigate("/login", { replace: true });
         })
         .catch((error) => {
-          setErrorMessage(error.message);
+          console.log(error);
+          if (error.message.message) {
+            setErrorMessage(error.message.message);
+          } else if (error.message) setErrorMessage(error.message);
         });
     }
 

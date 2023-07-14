@@ -7,7 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { loginUser, testUser } from "../services/userServices";
 
 import { useDispatch, useSelector } from "react-redux";
+
 import { userLoginAction } from "../redux/actions/userActions";
+import { setChatRoom } from "../redux/actions/chatRoomActions";
 
 function LoginPage() {
   const [validated, setValidated] = useState(false);
@@ -37,13 +39,25 @@ function LoginPage() {
         .then((res) => {
           navigate("/home", { replace: true });
           const userData = res.data.user;
-          if (userData.doNotLogout)
-            localStorage.setItem("userData", JSON.stringify(userData));
-          else sessionStorage.setItem("userData", JSON.stringify(userData));
+          const { chatRooms } = res.data;
 
+          if (userData.doNotLogout) {
+            localStorage.setItem("userData", JSON.stringify(userData));
+            localStorage.setItem("chatRoomsData", JSON.stringify(chatRooms));
+          } else {
+            sessionStorage.setItem("userData", JSON.stringify(userData));
+            sessionStorage.setItem("chatRooms", JSON.stringify(chatRooms));
+          }
+
+          dispatch(setChatRoom(chatRooms));
           dispatch(userLoginAction(userData));
         })
-        .catch((error) => setErrorMessage(error.message));
+        .catch((error) => {
+          console.log(error);
+          if (error.message.message) {
+            setErrorMessage(error.message.message);
+          } else if (error.message) setErrorMessage(error.message);
+        });
     }
   };
 
