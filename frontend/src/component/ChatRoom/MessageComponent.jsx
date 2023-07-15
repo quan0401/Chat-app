@@ -1,20 +1,17 @@
 import { Card, Image, Row } from "react-bootstrap";
 
 function MessageComponent({
-  sender = "asdf",
-  content = "aldskjf",
-  timestamp = "alskfj",
   isMe = false,
   inGroup = false,
   read = false,
   readers = [],
+  msg,
 }) {
   const justifyContentValue = !isMe ? "start" : "end";
   const cssRead = {};
   if (read)
     if (isMe) cssRead.top = "100%";
     else cssRead.bottom = "0";
-
   return (
     <div
       style={{
@@ -31,7 +28,7 @@ function MessageComponent({
             borderRadius: "50%",
             marginRight: 12,
           }}
-          src="/img/ava.jpg"
+          src={msg.owner.avatar}
         />
       )}
       <div
@@ -49,7 +46,7 @@ function MessageComponent({
           }}
           className="my-text-primary m-0 "
         >
-          adsfasdf
+          {msg?.content}
         </p>
       </div>
       {read && (
@@ -73,35 +70,7 @@ function MessageComponent({
               borderRadius: "50%",
               marginRight: 4,
             }}
-            src="/img/ava.jpg"
-          />
-          <Image
-            style={{
-              width: 14,
-              height: 14,
-              objectFit: "cover",
-              borderRadius: "50%",
-            }}
-            src="/img/ava.jpg"
-          />
-          <Image
-            style={{
-              width: 14,
-              height: 14,
-              objectFit: "cover",
-              borderRadius: "50%",
-              marginRight: 4,
-            }}
-            src="/img/ava.jpg"
-          />
-          <Image
-            style={{
-              width: 14,
-              height: 14,
-              objectFit: "cover",
-              borderRadius: "50%",
-            }}
-            src="/img/ava.jpg"
+            src={msg.owner.avatar}
           />
         </div>
       )}

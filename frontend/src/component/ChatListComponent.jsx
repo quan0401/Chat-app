@@ -1,11 +1,4 @@
-import {
-  Container,
-  Form,
-  Image,
-  Row,
-  Dropdown,
-  DropdownButton,
-} from "react-bootstrap";
+import { Container, Form, Image, Row, Dropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import ChatListItemComponent from "./ChatListItemComponent";
@@ -13,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { userLogoutAction } from "../redux/actions/userActions";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { selectRoomAction } from "../redux/actions/chatRoomActions";
 
 function ChatListComponent() {
   const navigate = useNavigate();
@@ -20,6 +14,10 @@ function ChatListComponent() {
 
   const { userData } = useSelector((state) => state.user);
   const { chatRoomsData } = useSelector((state) => state.chatRoom);
+
+  const handleSelectRoom = (roomIndex) => {
+    dispatch(selectRoomAction(roomIndex));
+  };
 
   const handleLogout = () => {
     dispatch(userLogoutAction());
@@ -82,14 +80,15 @@ function ChatListComponent() {
             const member = room.members.find(
               (member) => userData._id !== member._id
             );
-            console.log("room", room);
-            console.log("member", member);
             return (
               <ChatListItemComponent
                 key={index}
                 roomName={member.name}
                 lastMessage={room.lastMessage}
                 roomPhoto={member.avatar}
+                onClick={() => {
+                  handleSelectRoom(index);
+                }}
               />
             );
           })}

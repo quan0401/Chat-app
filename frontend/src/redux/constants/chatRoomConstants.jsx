@@ -1,1 +1,3 @@
 export const SET_CHATROOM = "SET_CHATROOM";
+export const SELECT_ROOM = "SELECT_ROOM";
+export const ADD_ROOM = "ADD_ROOM";

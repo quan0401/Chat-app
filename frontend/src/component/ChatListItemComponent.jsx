@@ -3,10 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 // import { faCircleCheck as faCircleCheckReg } from "@fortawesome/free-regular-svg-icons";
 
-function ChatListItemComponent({ roomName, roomPhoto = "", lastMessage = {} }) {
-  console.log("lastMessage", lastMessage);
+function ChatListItemComponent({
+  roomName,
+  roomPhoto = "",
+  lastMessage = {},
+  ...props
+}) {
   return (
-    <Row className="chat-list-item align-items-center">
+    <Row {...props} className="chat-list-item align-items-center">
       <Col
         xs="2"
         xl="3"

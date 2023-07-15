@@ -4,7 +4,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import MessageComponent from "./MessageComponent";
 import { useEffect, useState } from "react";
 
-function ChatRoomBodyComponent() {
+function ChatRoomBodyComponent({ roomData, userData }) {
   const [inputText, setInputText] = useState("");
   const sendMessage = (textValue) => {};
 
@@ -53,14 +53,16 @@ function ChatRoomBodyComponent() {
       </div>
 
       <div>
-        {Array.from({ length: 100 }).map((item, index) => (
-          <MessageComponent
-            key={index}
-            isMe={index % 2 === 0}
-            read={index % 2 !== 0}
-          />
-        ))}
-        <MessageComponent isMe={true} read={true} />
+        {roomData.messages.map((msg, index) => {
+          return (
+            <MessageComponent
+              msg={msg}
+              key={index}
+              isMe={userData._id === msg.owner._id ? true : false}
+              read={msg.read}
+            />
+          );
+        })}
       </div>
     </div>
   );

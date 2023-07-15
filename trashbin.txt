@@ -1,0 +1,6 @@
+{
+      selectedRoomIndex > -1 && 
+    }
+ 
+Message fkajfkdasfj
+ 

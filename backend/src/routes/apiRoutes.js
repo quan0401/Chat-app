@@ -3,8 +3,10 @@ const { verify } = require("jsonwebtoken");
 const userRoutes = require("./userRoutes");
 const express = require("express");
 const app = express();
+const chatRoomRoutes = require("./chatRoomRoutes");
 
 app.use("/user", userRoutes);
+app.use("/chatRoom", chatRoomRoutes);
 
 app.get("/logout", (req, res, next) => {
   return res

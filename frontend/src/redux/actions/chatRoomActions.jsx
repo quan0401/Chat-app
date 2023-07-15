@@ -5,3 +5,16 @@ export const setChatRoom = (chatRoomsData) => (dispatch, getState) => {
     type: chatRoomConstants.SET_CHATROOM,
   });
 };
+
+export const selectRoomAction = (roomIndex) => (dispatch) => {
+  dispatch({
+    type: chatRoomConstants.SELECT_ROOM,
+    payload: roomIndex,
+  });
+};
+export const addChatRoom = (room) => (dispatch) => {
+  dispatch({
+    type: chatRoomConstants.ADD_ROOM,
+    payload: room,
+  });
+};
