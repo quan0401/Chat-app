@@ -21,7 +21,7 @@ function ChatRoomComponent() {
         dispatch(addChatRoom(res.data));
       });
     }
-  }, [chatRoomsData, selectedRoomIndex]);
+  }, [selectedRoomIndex]);
   return (
     <div>
       {selectedRoomIndex > -1 && room && (

@@ -4,9 +4,7 @@ const userRoutes = require("./userRoutes");
 const express = require("express");
 const app = express();
 const chatRoomRoutes = require("./chatRoomRoutes");
-
-app.use("/user", userRoutes);
-app.use("/chatRoom", chatRoomRoutes);
+const messageRoutes = require("./messageRoute");
 
 app.get("/logout", (req, res, next) => {
   return res
@@ -30,5 +28,9 @@ app.get("/get-token", (req, res, next) => {
     });
   }
 });
+
+app.use("/user", userRoutes);
+app.use("/chatRoom", chatRoomRoutes);
+app.use("/message", messageRoutes);
 
 module.exports = app;

@@ -22,3 +22,6 @@ export const logoutUser = async () => {
 export const testUser = async () => {
   return await axiosInstance.get("/api/user/test");
 };
+export const userSendMessage = async (userId, content, roomId) => {
+  return await axiosInstance.post("/api/message", { userId, content, roomId });
+};

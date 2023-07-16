@@ -1,6 +1,4 @@
-const ChatRoom = require("../models/ChatRoomModel");
 const User = require("../models/UserModel");
-const messages = require("../seeder/message");
 const { hashPassword, comparePassword } = require("../utils/hashPassword");
 const { generateAuthToken } = require("../utils/jwt");
 require("dotenv").config();

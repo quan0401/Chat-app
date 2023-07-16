@@ -18,3 +18,9 @@ export const addChatRoom = (room) => (dispatch) => {
     payload: room,
   });
 };
+export const addMessageAction = (message) => (dispatch) => {
+  dispatch({
+    type: chatRoomConstants.ADD_MESSAGE,
+    payload: message,
+  });
+};

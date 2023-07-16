@@ -1,5 +1,5 @@
 import { logoutUser } from "../../services/userServices";
-import axiosInstance from "../../setup/axios";
+
 import * as userConstants from "../constants/userConstants";
 export const userLoginAction = (userData) => (dispatch, getState) => {
   dispatch({
@@ -17,5 +17,12 @@ export const userLogoutAction = () => async (dispatch) => {
   logoutUser().then((res) => {});
   dispatch({
     type: userConstants.LOGOUT,
+  });
+};
+
+export const setSocket = (socket) => (dispatch) => {
+  dispatch({
+    type: userConstants.SET_SOCKET,
+    payload: socket,
   });
 };

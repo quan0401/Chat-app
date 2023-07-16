@@ -1,13 +1,13 @@
-import { Container, Form, Row } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import MessageComponent from "./MessageComponent";
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { userSendMessage } from "../../services/userServices";
+import { addMessageAction } from "../../redux/actions/chatRoomActions";
 
 function ChatRoomBodyComponent({ roomData, userData }) {
-  const [inputText, setInputText] = useState("");
-  const sendMessage = (textValue) => {};
-
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const cssPos = isSmallScreen ? { left: 0 } : {};
 
@@ -22,6 +22,40 @@ function ChatRoomBodyComponent({ roomData, userData }) {
       window.removeEventListener("resize", handlePositionInput);
     };
   }, []);
+  // Above is ui only
+  const dispatch = useDispatch();
+  const { socket } = useSelector((state) => state.user);
+
+  const sendMessage = async (e) => {
+    const text = e.target.value;
+    if (text.trim() === "" || e.code !== "Enter") return;
+    const { members } = roomData;
+
+    socket.emit(
+      "User sends message",
+      {
+        senderId: userData._id,
+        content: text,
+        receivers: members.filter((member) => member._id !== userData._id),
+        roomId: roomData._id,
+      },
+      (message) => {
+        dispatch(addMessageAction(message));
+      }
+    );
+
+    e.target.value = "";
+  };
+
+  useEffect(() => {
+    socket.on("User sends message", (message) => {
+      dispatch(addMessageAction(message));
+    });
+
+    return () => {
+      socket.off("User sends message");
+    };
+  }, [socket, dispatch]);
 
   return (
     <div
@@ -38,9 +72,7 @@ function ChatRoomBodyComponent({ roomData, userData }) {
         <FontAwesomeIcon className="ms-3 secondary" icon={faMagnifyingGlass} />
 
         <Form.Control
-          onKeyUp={(e) => sendMessage(e.target.value)}
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
+          onKeyUp={(e) => sendMessage(e)}
           className="custom-input text-white "
           style={{
             backgroundColor: "transparent",

@@ -1,4 +1,7 @@
 import axios from "axios";
+import store from "../redux/store";
+
+import { userLogoutAction } from "../redux/actions/userActions";
 
 const axiosInstance = axios.create();
 
@@ -21,7 +24,9 @@ axiosInstance.interceptors.response.use(
   (error) => {
     // handle response un-authen error
     if (error.response.status === 401) {
+      store.dispatch(userLogoutAction());
     }
+
     return Promise.reject(error.response.data);
   }
 );

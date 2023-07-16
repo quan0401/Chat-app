@@ -1,67 +1,10 @@
-// import { Col, Container, Row } from "react-bootstrap";
-// import ChatListComponent from "../component/ChatListComponent";
-// import ChatRoomComponent from "../component/ChatRoomComponent";
-// function HomePage() {
-//   return (
-//     <Container fluid>
-//       {/* <Row className="mt-3">
-//         <Col xxl="3" md="5" className="d-none d-md-block">
-//           <ChatListComponent />
-//         </Col>
-
-//         <Col xxl="6" md="7" xs="12" className="vh-100">
-//           <div className="">
-//             <ChatRoomComponent />
-//           </div>
-//         </Col>
-
-// <Col xxl="3" className="d-none d-xxl-block">
-//   <h1>Chat Detail</h1>
-// </Col>
-//       </Row> */}
-
-//       <Row className="mt-3">
-//         <Col xs={12} md={5} className=" d-md-block">
-//           <div
-//             className={`chat-list-wrapper ${
-//               window.innerWidth < 576 ? "fullscreen" : "w-400"
-//             }`}
-//           >
-//             <ChatListComponent />
-//           </div>
-//         </Col>
-
-//         <Col xxl={6} md={7} xs={12} className="vh-100 d-none">
-//           <div className="">
-//             <ChatRoomComponent />
-//           </div>
-//         </Col>
-//       </Row>
-
-//       {/* <div className="d-flex">
-//         <div
-//           style={{ width: 400, minWidth: 400 }}
-//           className="d-none d-md-block"
-//         >
-//           <ChatListComponent />
-//         </div>
-
-// <div xxl="6" md="12" xs="12" className="vh-100 w-100">
-//   <div>
-//     <ChatRoomComponent />
-//   </div>
-// </div>
-//       </div> */}
-//     </Container>
-//   );
-// }
-
-// export default HomePage;
-
 import { Col, Container, Row } from "react-bootstrap";
 import ChatListComponent from "../component/ChatListComponent";
 import ChatRoomComponent from "../component/ChatRoomComponent";
 import { useEffect, useState } from "react";
+import socketIO from "socket.io-client";
+import { useSelector, useDispatch } from "react-redux";
+import { setSocket } from "../redux/actions/userActions";
 
 function HomePage() {
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -80,6 +23,20 @@ function HomePage() {
 
     return () => {
       window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  // Above is ui only
+  const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const socket = socketIO.connect();
+    socket.emit("User online", userData._id);
+
+    dispatch(setSocket(socket));
+    return () => {
+      socket.emit("User ofline", userData._id);
+      socket.disconnect();
     };
   }, []);
 

@@ -20,6 +20,12 @@ const userReducer = (state = initialState, action) => {
         // name: "unknown",
       };
     }
+    case userConstants.SET_SOCKET: {
+      return {
+        ...state,
+        socket: action.payload,
+      };
+    }
 
     default: {
       return state;

@@ -35,6 +35,16 @@ const chatRoomReducer = (state = initialState, action) => {
         chatRoomsData: roomsData,
       };
     }
+    case chatRoomConstants.ADD_MESSAGE: {
+      if (state.selectedRoomIndex !== -1) {
+        state.chatRoomsData[state.selectedRoomIndex].messages.push(
+          action.payload
+        );
+      }
+      return {
+        ...state,
+      };
+    }
     default: {
       return state;
     }

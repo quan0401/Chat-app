@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import publicRoutes from "./routes/publicRoutes";
 import userRoutes from "./routes/userRoutes";
-import { socket } from "./socket";
+
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 
 function App() {
