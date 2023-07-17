@@ -25,3 +25,7 @@ export const testUser = async () => {
 export const userSendMessage = async (userId, content, roomId) => {
   return await axiosInstance.post("/api/message", { userId, content, roomId });
 };
+
+export const getUserAndChatRoomData = async () => {
+  return await axiosInstance.get("/api/user");
+};

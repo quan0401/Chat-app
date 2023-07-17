@@ -4,7 +4,6 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import MessageComponent from "./MessageComponent";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { userSendMessage } from "../../services/userServices";
 import { addMessageAction } from "../../redux/actions/chatRoomActions";
 
 function ChatRoomBodyComponent({ roomData, userData }) {

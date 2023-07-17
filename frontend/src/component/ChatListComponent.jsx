@@ -28,7 +28,7 @@ function ChatListComponent() {
       <Row>
         <Dropdown>
           <Dropdown.Toggle className="bg-transparent ">
-            <div>
+            <div className="d-flex align-items-center">
               <Image
                 style={{
                   width: 44,
@@ -38,6 +38,7 @@ function ChatListComponent() {
                 }}
                 src={userData?.avatar}
               />
+              <h4 className="m-0 p-0 ms-2">{userData.name}</h4>
             </div>
           </Dropdown.Toggle>
 

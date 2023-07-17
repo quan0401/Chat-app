@@ -17,7 +17,7 @@ const userReducer = (state = initialState, action) => {
     }
     case userConstants.LOGOUT: {
       return {
-        // name: "unknown",
+        ...{},
       };
     }
     case userConstants.SET_SOCKET: {

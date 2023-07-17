@@ -49,104 +49,37 @@ const loginUser = async (req, res, next) => {
     const email = req.body.email || "";
     if ((!name && !email) || !password) res.status(400).send("Missing fields");
 
-    const user = await User.findOne({ $or: [{ email }, { name }] })
-      .select("-__v ")
-      // -------this not work
-      // .populate({
-      //   path: "chatRooms",
-      //   populate: {
-      //     path: "members",
-      //     model: "User",
-      //   },
-      //   populate: {
-      //     path: "messages",
-      //     model: "Message",
-      //     populate: {
-      //       path: "owner",
-      //       model: "User",
-      //     },
-      //     options: { limit: 5 },
-      //   },
-      // })
-      // -------this works
-      .populate({
-        path: "chatRooms",
-        populate: {
-          path: "members",
-          model: "User",
-          select: "-__v -password -chatRooms",
-        },
-      })
-      .populate({
-        path: "chatRooms",
-        select: "-__v",
-        populate: [
-          {
-            path: "messages",
-            model: "Message",
-            select: "-__v",
-            populate: {
-              path: "owner",
-              model: "User",
-              select: "-__v -password -chatRooms",
-            },
-          },
-          {
-            path: "lastMessage",
-            model: "Message",
-            select: "-__v",
-            populate: {
-              path: "owner",
-              model: "User",
-              select: "name avatar",
-            },
-          },
-        ],
-      })
-      // -------This works
-      // .populate({
-      //   path: "chatRooms",
-      //   populate: [
-      //     {
-      //       path: "members",
-      //       model: "User",
-      //     },
-      //     {
-      //       path: "messages",
-      //       model: "Message",
-      //       populate: {
-      //         path: "owner",
-      //         model: "User",
-      //       },
-      //       options: { limit: 5 },
-      //     },
-      //   ],
-      // })
-      // .populate({
-      //   path: "chatRooms",
-      //   populate: [
-      //     {
-      //       path: "lastMessage",
-      //       model: "Message",
-      //     },
-      //     {
-      //       path: "members",
-      //       model: "User",
-      //       options: {
-      //         limit: 5,
-      //       },
-      //     },
-      //   ],
-      // })
+    let user = await User.findOne({ $or: [{ email }, { name }] })
+      .select("-__v")
       .orFail();
 
     if (!comparePassword(password, user?.password ? user.password : ""))
       return res.status(400).send({ EC: 0, message: "Wrong credentials" });
 
     const userData = JSON.parse(JSON.stringify(user));
-    const { chatRooms } = userData;
+
+    user = await user.populate({
+      path: "chatRooms",
+      model: "ChatRoom",
+      populate: [
+        {
+          path: "members",
+          model: "User",
+          select: "-password",
+        },
+        {
+          path: "messages",
+          model: "Message",
+        },
+        {
+          path: "lastMessage",
+          model: "Message",
+        },
+      ],
+    });
+
+    const { chatRooms } = user;
     delete userData.password;
-    delete userData.chatRooms;
 
     const cookieParams = {
       httpOnly: true,
@@ -171,6 +104,112 @@ const loginUser = async (req, res, next) => {
     next(error);
   }
 };
+
+// const getUserAndChatRoomData = async (req, res, next) => {
+//   try {
+//     const { _id: userId } = req.user;
+//     if (!userId) res.status(400).send("Missing userId");
+
+//     const user = await User.findById(userId)
+//       .select("-__v ")
+//       .populate({
+//         path: "chatRooms",
+//         populate: {
+//           path: "members",
+//           model: "User",
+//           select: "-__v -password -chatRooms",
+//         },
+//       })
+//       .populate({
+//         path: "chatRooms",
+//         select: "-__v",
+//         populate: [
+//           {
+//             path: "messages",
+//             model: "Message",
+//             select: "-__v",
+//             populate: {
+//               path: "owner",
+//               model: "User",
+//               select: "-__v -password -chatRooms",
+//             },
+//           },
+//           {
+//             path: "lastMessage",
+//             model: "Message",
+//             select: "-__v",
+//             populate: {
+//               path: "owner",
+//               model: "User",
+//               select: "name avatar",
+//             },
+//           },
+//         ],
+//       })
+//       .orFail();
+
+//     const userData = JSON.parse(JSON.stringify(user));
+//     const { chatRooms } = userData;
+//     delete userData.password;
+//     delete userData.chatRooms;
+
+//     return res.status(200).send({
+//       EC: 0,
+//       message: "ok",
+//       data: {
+//         user: userData,
+//         chatRooms,
+//       },
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+const getUserAndChatRoomData = async (req, res, next) => {
+  try {
+    const { _id: userId } = req.user;
+    if (!userId) res.status(400).send("Missing userId");
+
+    let user = await User.findById(userId).select("-__v -password").orFail();
+
+    const userData = JSON.parse(JSON.stringify(user));
+
+    user = await user.populate({
+      path: "chatRooms",
+      model: "ChatRoom",
+      populate: [
+        {
+          path: "members",
+          model: "User",
+          select: "-password",
+        },
+        {
+          path: "messages",
+          model: "Message",
+        },
+        {
+          path: "lastMessage",
+          model: "Message",
+        },
+      ],
+    });
+
+    const { chatRooms } = user;
+
+    return res.status(200).send({
+      EC: 0,
+      message: "ok",
+      data: {
+        user: userData,
+        chatRooms,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const userTest = (req, res, next) => {
   try {
     console.log(req.user);
@@ -180,4 +219,4 @@ const userTest = (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, loginUser, userTest };
+module.exports = { registerUser, loginUser, userTest, getUserAndChatRoomData };

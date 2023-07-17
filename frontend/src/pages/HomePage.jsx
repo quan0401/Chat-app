@@ -4,7 +4,9 @@ import ChatRoomComponent from "../component/ChatRoomComponent";
 import { useEffect, useState } from "react";
 import socketIO from "socket.io-client";
 import { useSelector, useDispatch } from "react-redux";
-import { setSocket } from "../redux/actions/userActions";
+import { setSocket, userLoginAction } from "../redux/actions/userActions";
+import { getUserAndChatRoomData } from "../services/userServices";
+import { setChatRoom } from "../redux/actions/chatRoomActions";
 
 function HomePage() {
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -31,14 +33,35 @@ function HomePage() {
 
   useEffect(() => {
     const socket = socketIO.connect();
-    socket.emit("User online", userData._id);
+    socket.emit("User online", {
+      userId: userData._id,
+      // userChatRooms: userData.chatRooms,
+    });
 
     dispatch(setSocket(socket));
     return () => {
       socket.emit("User ofline", userData._id);
       socket.disconnect();
     };
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    getUserAndChatRoomData().then((res) => {
+      const userData = res.data.user;
+      const { chatRooms } = res.data;
+
+      if (userData.doNotLogout) {
+        localStorage.setItem("userData", JSON.stringify(userData));
+        localStorage.setItem("chatRoomsData", JSON.stringify(chatRooms));
+      } else {
+        sessionStorage.setItem("userData", JSON.stringify(userData));
+        sessionStorage.setItem("chatRooms", JSON.stringify(chatRooms));
+      }
+
+      dispatch(setChatRoom(chatRooms));
+      dispatch(userLoginAction(userData));
+    });
+  }, [dispatch]);
 
   return (
     <Container fluid>

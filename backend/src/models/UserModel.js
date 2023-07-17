@@ -12,6 +12,7 @@ const userSchema = new Schema(
     chatRooms: [{ type: Schema.Types.ObjectId, ref: "ChatRoom", unique: true }],
     email: { type: String },
     password: { type: String, required: true },
+    lastOnline: { type: Date },
   },
   {
     timestamps: true,

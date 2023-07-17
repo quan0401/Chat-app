@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Container, Button, Col, Form, Row, Alert } from "react-bootstrap";
 
 import { useNavigate } from "react-router-dom";
 
-import { loginUser, testUser } from "../services/userServices";
+import { loginUser } from "../services/userServices";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { userLoginAction } from "../redux/actions/userActions";
 import { setChatRoom } from "../redux/actions/chatRoomActions";
