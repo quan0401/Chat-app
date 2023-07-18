@@ -34,7 +34,7 @@ function RegisterPage() {
       username.trim() !== "" &&
       password.trim() !== ""
     ) {
-      registerUser(username, email, password)
+      registerUser(username.trim(), email.trim(), password.trim())
         .then((res) => {
           console.log(res);
           navigate("/login", { replace: true });

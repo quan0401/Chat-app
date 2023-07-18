@@ -35,7 +35,7 @@ function LoginPage() {
       usernameValue.trim() !== "" &&
       passwordValue.trim() !== ""
     ) {
-      loginUser(usernameValue, passwordValue, doNotLogout)
+      loginUser(usernameValue.trim(), passwordValue.trim(), doNotLogout)
         .then((res) => {
           navigate("/home", { replace: true });
           const userData = res.data.user;

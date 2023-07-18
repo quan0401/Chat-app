@@ -7,13 +7,16 @@ import { userLogoutAction } from "../redux/actions/userActions";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectRoomAction } from "../redux/actions/chatRoomActions";
+import { useEffect } from "react";
 
 function ChatListComponent() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { userData } = useSelector((state) => state.user);
-  const { chatRoomsData } = useSelector((state) => state.chatRoom);
+  const { userData, socket } = useSelector((state) => state.user);
+  const { chatRoomsData, selectedRoomIndex } = useSelector(
+    (state) => state.chatRoom
+  );
 
   const handleSelectRoom = (roomIndex) => {
     dispatch(selectRoomAction(roomIndex));
@@ -23,6 +26,13 @@ function ChatListComponent() {
     dispatch(userLogoutAction());
     navigate("/login");
   };
+
+  useEffect(() => {
+    if (selectedRoomIndex !== -1) {
+      console.log(0);
+    }
+  }, [selectedRoomIndex, chatRoomsData[selectedRoomIndex]?.messages]);
+
   return (
     <Container fluid>
       <Row>

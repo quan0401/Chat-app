@@ -23,11 +23,15 @@ function ChatRoomComponent() {
     }
   }, [selectedRoomIndex]);
   return (
-    <div>
+    <div style={{ marginRight: -12 }}>
       {selectedRoomIndex > -1 && room && (
         <>
           <ChatRoomHeaderComponent userData={userData} roomData={room} />
-          <ChatRoomBodyComponent roomData={room} userData={userData} />
+          <ChatRoomBodyComponent
+            roomData={room}
+            userData={userData}
+            selectedRoomIndex={selectedRoomIndex}
+          />
         </>
       )}
     </div>

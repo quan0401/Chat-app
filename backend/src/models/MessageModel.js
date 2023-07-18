@@ -5,7 +5,7 @@ const messageSchema = new Schema(
   {
     owner: { type: Schema.Types.ObjectId, ref: "User", required: true }, // String is shorthand for {type: String}
     content: { type: String, required: true },
-    read: { type: Boolean, default: false },
+    read: [{ type: Schema.Types.ObjectId, ref: "User", unique: true }],
   },
   {
     timestamps: true,

@@ -28,11 +28,7 @@ const registerUser = async (req, res, next) => {
       email,
       password: hashPassword(password),
     });
-    // const cookieParams = {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production",
-    // };
-    // res.cookie("access_token", generateAuthToken(user), cookieParams);
+
     await user.save();
     return res.status(201).send({
       EC: 0,

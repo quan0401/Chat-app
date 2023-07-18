@@ -2,7 +2,7 @@ import { Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import MessageComponent from "./MessageComponent";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addMessageAction } from "../../redux/actions/chatRoomActions";
 
@@ -24,6 +24,11 @@ function ChatRoomBodyComponent({ roomData, userData }) {
   // Above is ui only
   const dispatch = useDispatch();
   const { socket } = useSelector((state) => state.user);
+  const members = roomData.members;
+
+  // Use for read sign
+  let readers = useRef([]);
+  let checked = useRef({});
 
   const sendMessage = async (e) => {
     const text = e.target.value;
@@ -42,7 +47,6 @@ function ChatRoomBodyComponent({ roomData, userData }) {
         dispatch(addMessageAction(message));
       }
     );
-
     e.target.value = "";
   };
 
@@ -58,8 +62,8 @@ function ChatRoomBodyComponent({ roomData, userData }) {
 
   return (
     <div
-      className="w-100 position-relative"
-      style={{ overflow: "auto", height: "90vh" }}
+      className="w-100 overflow-y-auto overflow-x-visible position-relative"
+      style={{ height: "90vh" }}
     >
       {/* Text input */}
       <div
@@ -85,12 +89,35 @@ function ChatRoomBodyComponent({ roomData, userData }) {
 
       <div>
         {roomData.messages.map((msg, index) => {
+          let hasRead = [];
+
+          const nextMsg = roomData.messages[index + 1];
+
+          if (index !== 0 && nextMsg) {
+            readers.current.forEach((reader) => {
+              if (reader !== userData._id && checked.current[reader] !== true) {
+                if (nextMsg.read.indexOf(reader) === -1) {
+                  hasRead.push(reader);
+                  checked.current[reader] = true;
+                }
+              }
+            });
+          } else if (index + 1 === roomData.messages.length) {
+            hasRead = msg.read;
+            const index = hasRead.indexOf(userData._id);
+            if (index !== -1) {
+              hasRead.splice(index, 1);
+            }
+          }
+          readers.current = [...new Set([...msg.read])];
+
           return (
             <MessageComponent
               msg={msg}
               key={index}
               isMe={userData._id === msg.owner._id ? true : false}
-              read={msg.read}
+              readers={hasRead}
+              roomData={roomData}
             />
           );
         })}

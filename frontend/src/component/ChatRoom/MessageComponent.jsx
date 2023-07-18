@@ -1,23 +1,20 @@
-import { Card, Image, Row } from "react-bootstrap";
+import { Image } from "react-bootstrap";
 
 function MessageComponent({
   isMe = false,
   inGroup = false,
-  read = false,
   readers = [],
   msg,
+  roomData,
 }) {
   const justifyContentValue = !isMe ? "start" : "end";
-  const cssRead = {};
-  if (read)
-    if (isMe) cssRead.top = "100%";
-    else cssRead.bottom = "0";
   return (
     <div
       style={{
         justifyContent: justifyContentValue,
+        marginBottom: readers.length > 1 ? -20 : 2,
       }}
-      className="d-flex align-items-center mb-1 position-relative"
+      className="d-flex align-items-center position-relative"
     >
       {!isMe && inGroup && (
         <Image
@@ -34,6 +31,7 @@ function MessageComponent({
       <div
         style={{
           borderRadius: 40,
+          marginRight: 20,
         }}
         className={
           isMe ? " my-bg-primary-color p-2 px-3" : "my-bg-third-color p-2 px-3"
@@ -44,34 +42,40 @@ function MessageComponent({
             maxWidth: "400px",
             wordBreak: "break-all",
           }}
-          className="my-text-primary m-0 "
+          className="my-text-primary m-0"
         >
           {msg?.content}
         </p>
       </div>
-      {read && (
+      {readers.length > 0 && (
         <div
           className="position-absolute"
           style={{
-            // bottom: 0,
+            bottom: readers.length > 1 ? -20 : 0,
             maxWidth: "100px",
             overflow: "hidden",
             whiteSpace: "nowrap",
             right: 0,
-            // top: "100%",
-            ...cssRead,
           }}
         >
-          <Image
-            style={{
-              width: 14,
-              height: 14,
-              objectFit: "cover",
-              borderRadius: "50%",
-              marginRight: 4,
-            }}
-            src={msg.owner.avatar}
-          />
+          {readers.map((reader, index) => {
+            return (
+              <Image
+                key={index}
+                style={{
+                  width: 14,
+                  height: 14,
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                  marginRight: 4,
+                }}
+                src={
+                  roomData.members.find((member) => member._id === reader)
+                    .avatar
+                }
+              />
+            );
+          })}
         </div>
       )}
     </div>

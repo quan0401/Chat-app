@@ -64,15 +64,17 @@ function HomePage() {
   }, [dispatch]);
 
   return (
-    <Container fluid>
-      <Row style={{ ...cssFullEdgeScreen }} className="mt-3">
+    <>
+      <Row style={{ ...cssFullEdgeScreen }} className="mt-3 w-100">
         <Col
           xs={12}
           md={5}
           style={{
             ...cssFullScreen,
           }}
-          className={`d-md-block ${isFullScreen ? "vh-100" : "w-400"}`}
+          className={`d-md-block p-0 ${
+            isFullScreen ? "vh-100 d-none" : "w-400"
+          }`}
         >
           <div className="chat-list-wrapper">
             <ChatListComponent />
@@ -83,7 +85,8 @@ function HomePage() {
           xxl={7}
           md={7}
           xs={12}
-          className={`vh-100 ${isFullScreen ? "d-none" : ""}`}
+          // className={`vh-100 p-0 ${isFullScreen ? "d-none" : ""}`}
+          className={`vh-100 p-0 `}
         >
           <ChatRoomComponent />
         </Col>
@@ -91,7 +94,7 @@ function HomePage() {
           <h1>Chat Detail</h1>
         </Col>
       </Row>
-    </Container>
+    </>
   );
 }
 

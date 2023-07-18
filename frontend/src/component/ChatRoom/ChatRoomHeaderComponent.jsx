@@ -41,7 +41,8 @@ function ChatRoomHeaderComponent({ roomData, userData }) {
             </div>
           </div>
         </Col>
-        <Col xs="5" lg="3" className=" pe-4">
+
+        <Col xs="5" lg="3">
           <div className="d-flex align-content-center justify-content-between">
             <FontAwesomeIcon
               className="secondary"
