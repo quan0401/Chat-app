@@ -9,25 +9,6 @@ import { getUserAndChatRoomData } from "../services/userServices";
 import { setChatRoom } from "../redux/actions/chatRoomActions";
 
 function HomePage() {
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const cssFullScreen = isFullScreen ? {} : { maxWidth: "400px" };
-  const cssFullEdgeScreen = isFullScreen
-    ? { marginLeft: -30, marginRight: -30 }
-    : {};
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsFullScreen(window.innerWidth < 768);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-  // Above is ui only
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.user);
 
@@ -65,35 +46,20 @@ function HomePage() {
 
   return (
     <>
-      <Row style={{ ...cssFullEdgeScreen }} className="mt-3 w-100">
-        <Col
-          xs={12}
-          md={5}
-          style={{
-            ...cssFullScreen,
-          }}
-          className={`d-md-block p-0 ${
-            isFullScreen ? "vh-100 d-none" : "w-400"
-          }`}
-        >
-          <div className="chat-list-wrapper">
+      <Container fluid>
+        <Row className="mt-3 overflow-x-hidden">
+          <Col md={4} xxl={3} className="d-none d-md-block">
             <ChatListComponent />
-          </div>
-        </Col>
+          </Col>
 
-        <Col
-          xxl={7}
-          md={7}
-          xs={12}
-          // className={`vh-100 p-0 ${isFullScreen ? "d-none" : ""}`}
-          className={`vh-100 p-0 `}
-        >
-          <ChatRoomComponent />
-        </Col>
-        <Col className="d-none d-xxl-block">
-          <h1>Chat Detail</h1>
-        </Col>
-      </Row>
+          <Col xxl={6} md={8} xs={12}>
+            <ChatRoomComponent />
+          </Col>
+          <Col xxl={3} className=" d-none d-xxl-block">
+            <h1>Chat Room detail</h1>
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 }

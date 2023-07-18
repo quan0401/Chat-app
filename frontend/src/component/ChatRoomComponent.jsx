@@ -23,7 +23,7 @@ function ChatRoomComponent() {
     }
   }, [selectedRoomIndex]);
   return (
-    <div style={{ marginRight: -12 }}>
+    <div>
       {selectedRoomIndex > -1 && room && (
         <>
           <ChatRoomHeaderComponent userData={userData} roomData={room} />

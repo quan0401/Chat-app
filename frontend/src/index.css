@@ -152,3 +152,7 @@ button:focus-visible {
 .dropdown-toggle::after {
   display: none !important;
 }
+
+.custom-chatRoomHeight {
+  height: calc(100% - var(--message-input-height));
+}
