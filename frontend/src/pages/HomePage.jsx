@@ -6,11 +6,14 @@ import socketIO from "socket.io-client";
 import { useSelector, useDispatch } from "react-redux";
 import { setSocket, userLoginAction } from "../redux/actions/userActions";
 import { getUserAndChatRoomData } from "../services/userServices";
-import { setChatRoom } from "../redux/actions/chatRoomActions";
+import {
+  markAsReadAction,
+  setChatRoom,
+} from "../redux/actions/chatRoomActions";
 
 function HomePage() {
   const dispatch = useDispatch();
-  const { userData } = useSelector((state) => state.user);
+  const { userData, socket } = useSelector((state) => state.user);
 
   useEffect(() => {
     const socket = socketIO.connect();
@@ -43,6 +46,16 @@ function HomePage() {
       dispatch(userLoginAction(userData));
     });
   }, [dispatch]);
+
+  useEffect(() => {
+    if (socket)
+      socket.on("Mark message as read", ({ roomId, readerId }) => {
+        dispatch(markAsReadAction(roomId, readerId));
+      });
+    return () => {
+      if (socket) socket.off("Mark message as read");
+    };
+  }, [dispatch, socket]);
 
   return (
     <>

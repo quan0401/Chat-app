@@ -24,3 +24,12 @@ export const addMessageAction = (message) => (dispatch) => {
     payload: message,
   });
 };
+export const markAsReadAction = (roomId, readerId) => (dispatch) => {
+  dispatch({
+    type: chatRoomConstants.MARK_READ,
+    payload: {
+      roomId,
+      readerId,
+    },
+  });
+};

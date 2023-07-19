@@ -66,10 +66,18 @@ const loginUser = async (req, res, next) => {
         {
           path: "messages",
           model: "Message",
+          populate: {
+            path: "owner",
+            model: "User",
+          },
         },
         {
           path: "lastMessage",
           model: "Message",
+          populate: {
+            path: "owner",
+            model: "User",
+          },
         },
       ],
     });
@@ -183,10 +191,18 @@ const getUserAndChatRoomData = async (req, res, next) => {
         {
           path: "messages",
           model: "Message",
+          populate: {
+            path: "owner",
+            model: "User",
+          },
         },
         {
           path: "lastMessage",
           model: "Message",
+          populate: {
+            path: "owner",
+            model: "User",
+          },
         },
       ],
     });

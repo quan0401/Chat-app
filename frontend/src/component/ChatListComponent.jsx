@@ -1,6 +1,6 @@
 import { Container, Form, Image, Row, Dropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faZ } from "@fortawesome/free-solid-svg-icons";
 import ChatListItemComponent from "./ChatListItemComponent";
 import { useDispatch } from "react-redux";
 import { userLogoutAction } from "../redux/actions/userActions";
@@ -26,12 +26,24 @@ function ChatListComponent() {
     dispatch(userLogoutAction());
     navigate("/login");
   };
+  // console.log(chatRoomsData[selectedRoomIndex]?.messages);
 
   useEffect(() => {
-    if (selectedRoomIndex !== -1) {
-      console.log(0);
+    if (selectedRoomIndex !== -1 && socket) {
+      const room = chatRoomsData[selectedRoomIndex];
+      const { lastMessage } = room;
+      const hasnotReadMessages = room.messages.filter(
+        (msg) => !msg.read.includes(userData._id)
+      );
+      const hasnotReadMessageIds = hasnotReadMessages.map((msg) => msg._id);
+
+      socket.emit("Mark message as read", {
+        room,
+        readerId: userData._id,
+        receivers: room.members.filter((member) => member._id !== userData._id),
+      });
     }
-  }, [selectedRoomIndex, chatRoomsData[selectedRoomIndex]?.messages]);
+  }, [chatRoomsData[selectedRoomIndex]?.messages.length, selectedRoomIndex]);
 
   return (
     <Container fluid>

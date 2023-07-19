@@ -23,6 +23,7 @@ const socketIO = () => {
           let message = await Message.create({
             content: content,
             owner: senderId,
+            read: [senderId],
           });
 
           foundChatRoom.lastMessage = message._id;
@@ -46,6 +47,38 @@ const socketIO = () => {
         }
       }
     );
+    socket.on("Mark message as read", async ({ room, readerId, receivers }) => {
+      try {
+        const unreadMessages = room.messages.filter(
+          (msg) => !msg.read.includes(readerId)
+        );
+        const unreadMessageIds = unreadMessages.map((msg) => msg._id);
+        let foundUnreadMessages;
+        if (unreadMessageIds.length > 0) {
+          foundUnreadMessages = await Message.find({
+            _id: { $in: unreadMessageIds },
+          })
+            .populate("owner")
+            .orFail();
+
+          foundUnreadMessages.forEach(async (msg) => {
+            if (!msg.read.includes(readerId)) {
+              msg.read.push(readerId);
+              await msg.save();
+            }
+          });
+        }
+        receivers.forEach((receiver) => {
+          if (onlineUser.hasOwnProperty(receiver._id)) {
+            socket
+              .to(onlineUser[receiver._id])
+              .emit("Mark message as read", { roomId: room._id, readerId });
+          }
+        });
+      } catch (error) {
+        console.log("socket: ", error);
+      }
+    });
 
     socket.on("disconnect", () => {
       Object.entries(onlineUser).forEach((arr) => {

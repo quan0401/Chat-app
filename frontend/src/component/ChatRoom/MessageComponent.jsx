@@ -5,14 +5,13 @@ function MessageComponent({
   inGroup = false,
   readers = [],
   msg,
-  roomData,
 }) {
   const justifyContentValue = !isMe ? "start" : "end";
   return (
     <div
       style={{
         justifyContent: justifyContentValue,
-        marginBottom: readers.length > 1 ? -20 : 2,
+        marginBottom: readers.length > 1 ? 20 : 2,
       }}
       className="d-flex align-items-center position-relative"
     >
@@ -58,24 +57,19 @@ function MessageComponent({
             right: 0,
           }}
         >
-          {readers.map((reader, index) => {
-            return (
-              <Image
-                key={index}
-                style={{
-                  width: 14,
-                  height: 14,
-                  objectFit: "cover",
-                  borderRadius: "50%",
-                  marginRight: 4,
-                }}
-                src={
-                  roomData.members.find((member) => member._id === reader)
-                    .avatar
-                }
-              />
-            );
-          })}
+          {readers.map((reader, index) => (
+            <Image
+              key={index}
+              style={{
+                width: 14,
+                height: 14,
+                objectFit: "cover",
+                borderRadius: "50%",
+                marginRight: 4,
+              }}
+              src={reader.avatar}
+            />
+          ))}
         </div>
       )}
     </div>
