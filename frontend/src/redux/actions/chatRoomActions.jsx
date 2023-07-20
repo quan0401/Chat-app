@@ -18,10 +18,10 @@ export const addChatRoom = (room) => (dispatch) => {
     payload: room,
   });
 };
-export const addMessageAction = (message) => (dispatch) => {
+export const addMessageAction = (message, roomId) => (dispatch) => {
   dispatch({
     type: chatRoomConstants.ADD_MESSAGE,
-    payload: message,
+    payload: { message, roomId },
   });
 };
 export const markAsReadAction = (roomId, readerId) => (dispatch) => {

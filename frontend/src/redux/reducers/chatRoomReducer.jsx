@@ -36,12 +36,12 @@ const chatRoomReducer = (state = initialState, action) => {
       };
     }
     case chatRoomConstants.ADD_MESSAGE: {
-      if (state.selectedRoomIndex !== -1) {
-        state.chatRoomsData[state.selectedRoomIndex].lastMessage =
-          action.payload;
-        state.chatRoomsData[state.selectedRoomIndex].messages.push(
-          action.payload
-        );
+      const roomIndex = state.chatRoomsData.findIndex(
+        (room) => room._id === action.payload.roomId
+      );
+      if (roomIndex !== -1) {
+        state.chatRoomsData[roomIndex].lastMessage = action.payload.message;
+        state.chatRoomsData[roomIndex].messages.push(action.payload.message);
       }
       return {
         ...state,

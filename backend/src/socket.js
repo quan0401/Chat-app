@@ -33,13 +33,13 @@ const socketIO = () => {
 
           message = await message.populate("owner");
 
-          cb(message);
+          cb(message, roomId);
 
           receivers.forEach((receiver) => {
             if (onlineUser.hasOwnProperty(receiver._id)) {
               socket
                 .to(onlineUser[receiver._id])
-                .emit("User sends message", message);
+                .emit("User sends message", { message, roomId });
             }
           });
         } catch (error) {

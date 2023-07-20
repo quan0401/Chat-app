@@ -1,17 +1,25 @@
 import { Container, Form, Image, Row, Dropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faZ } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import ChatListItemComponent from "./ChatListItemComponent";
 import { useDispatch } from "react-redux";
 import { userLogoutAction } from "../redux/actions/userActions";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectRoomAction } from "../redux/actions/chatRoomActions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function ChatListComponent() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [hasFocus, setHasFocus] = useState(false);
+
+  const onFocus = () => {
+    setHasFocus(true);
+  };
+  const onBlur = () => {
+    setHasFocus(false);
+  };
 
   const { userData, socket } = useSelector((state) => state.user);
   const { chatRoomsData, selectedRoomIndex } = useSelector(
@@ -29,13 +37,8 @@ function ChatListComponent() {
   // console.log(chatRoomsData[selectedRoomIndex]?.messages);
 
   useEffect(() => {
-    if (selectedRoomIndex !== -1 && socket) {
+    if (selectedRoomIndex !== -1 && socket && hasFocus) {
       const room = chatRoomsData[selectedRoomIndex];
-      const { lastMessage } = room;
-      const hasnotReadMessages = room.messages.filter(
-        (msg) => !msg.read.includes(userData._id)
-      );
-      const hasnotReadMessageIds = hasnotReadMessages.map((msg) => msg._id);
 
       socket.emit("Mark message as read", {
         room,
@@ -43,7 +46,21 @@ function ChatListComponent() {
         receivers: room.members.filter((member) => member._id !== userData._id),
       });
     }
-  }, [chatRoomsData[selectedRoomIndex]?.messages.length, selectedRoomIndex]);
+  }, [
+    chatRoomsData[selectedRoomIndex]?.messages.length,
+    selectedRoomIndex,
+    hasFocus,
+  ]);
+
+  useEffect(() => {
+    window.addEventListener("focus", onFocus);
+    window.addEventListener("blur", onBlur);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("blur", onBlur);
+    };
+  }, []);
+  console.log(chatRoomsData);
 
   return (
     <Container fluid>

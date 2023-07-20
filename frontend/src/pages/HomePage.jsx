@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setSocket, userLoginAction } from "../redux/actions/userActions";
 import { getUserAndChatRoomData } from "../services/userServices";
 import {
+  addMessageAction,
   markAsReadAction,
   setChatRoom,
 } from "../redux/actions/chatRoomActions";
@@ -56,6 +57,18 @@ function HomePage() {
       if (socket) socket.off("Mark message as read");
     };
   }, [dispatch, socket]);
+
+  // Add message for the receiver
+  useEffect(() => {
+    if (socket)
+      socket.on("User sends message", ({ message, roomId }) => {
+        dispatch(addMessageAction(message, roomId));
+      });
+
+    return () => {
+      if (socket) socket.off("User sends message");
+    };
+  }, [socket, dispatch]);
 
   return (
     <>

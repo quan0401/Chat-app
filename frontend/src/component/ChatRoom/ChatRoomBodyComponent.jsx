@@ -6,12 +6,21 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addMessageAction } from "../../redux/actions/chatRoomActions";
 
-function ChatRoomBodyComponent({ roomData, userData }) {
+function ChatRoomBodyComponent({ roomData, userData, selectedRoomIndex }) {
   const dispatch = useDispatch();
   const { socket } = useSelector((state) => state.user);
 
   const lastMessageReadIndex = {};
 
+  const handleScroll = () => {
+    const element = document.getElementById("intoView");
+    if (element) {
+      // 👇 Will scroll smoothly to the top of the next section
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  // for read feature, last message index that one read
   roomData.messages.forEach((msg, index) => {
     msg.read.forEach((reader) => {
       if (reader !== userData._id) lastMessageReadIndex[reader] = index;
@@ -32,24 +41,19 @@ function ChatRoomBodyComponent({ roomData, userData }) {
         receivers: members.filter((member) => member._id !== userData._id),
         roomId: roomData._id,
       },
-      (message) => {
-        dispatch(addMessageAction(message));
+      (message, roomId) => {
+        dispatch(addMessageAction(message, roomId));
+        setTimeout(() => {
+          handleScroll();
+        }, 500);
       }
     );
     e.target.value = "";
   };
 
-  // Add message for the receiver
   useEffect(() => {
-    if (socket)
-      socket.on("User sends message", (message) => {
-        dispatch(addMessageAction(message));
-      });
-
-    return () => {
-      socket.off("User sends message");
-    };
-  }, [socket, dispatch]);
+    handleScroll();
+  }, [selectedRoomIndex]);
 
   return (
     <div style={{ height: "100vh" }}>
@@ -96,6 +100,7 @@ function ChatRoomBodyComponent({ roomData, userData }) {
               />
             );
           })}
+          <div id="intoView"></div>
         </div>
       </div>
     </div>
