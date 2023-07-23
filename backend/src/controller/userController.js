@@ -57,19 +57,12 @@ const loginUser = async (req, res, next) => {
     user = await user.populate({
       path: "chatRooms",
       model: "ChatRoom",
+      select: "-messages",
       populate: [
         {
           path: "members",
           model: "User",
           select: "-password",
-        },
-        {
-          path: "messages",
-          model: "Message",
-          populate: {
-            path: "owner",
-            model: "User",
-          },
         },
         {
           path: "lastMessage",
@@ -109,67 +102,6 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-// const getUserAndChatRoomData = async (req, res, next) => {
-//   try {
-//     const { _id: userId } = req.user;
-//     if (!userId) res.status(400).send("Missing userId");
-
-//     const user = await User.findById(userId)
-//       .select("-__v ")
-//       .populate({
-//         path: "chatRooms",
-//         populate: {
-//           path: "members",
-//           model: "User",
-//           select: "-__v -password -chatRooms",
-//         },
-//       })
-//       .populate({
-//         path: "chatRooms",
-//         select: "-__v",
-//         populate: [
-//           {
-//             path: "messages",
-//             model: "Message",
-//             select: "-__v",
-//             populate: {
-//               path: "owner",
-//               model: "User",
-//               select: "-__v -password -chatRooms",
-//             },
-//           },
-//           {
-//             path: "lastMessage",
-//             model: "Message",
-//             select: "-__v",
-//             populate: {
-//               path: "owner",
-//               model: "User",
-//               select: "name avatar",
-//             },
-//           },
-//         ],
-//       })
-//       .orFail();
-
-//     const userData = JSON.parse(JSON.stringify(user));
-//     const { chatRooms } = userData;
-//     delete userData.password;
-//     delete userData.chatRooms;
-
-//     return res.status(200).send({
-//       EC: 0,
-//       message: "ok",
-//       data: {
-//         user: userData,
-//         chatRooms,
-//       },
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 const getUserAndChatRoomData = async (req, res, next) => {
   try {
     const { _id: userId } = req.user;
@@ -182,19 +114,12 @@ const getUserAndChatRoomData = async (req, res, next) => {
     user = await user.populate({
       path: "chatRooms",
       model: "ChatRoom",
+      select: "-messages",
       populate: [
         {
           path: "members",
           model: "User",
           select: "-password",
-        },
-        {
-          path: "messages",
-          model: "Message",
-          populate: {
-            path: "owner",
-            model: "User",
-          },
         },
         {
           path: "lastMessage",

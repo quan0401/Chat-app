@@ -6,19 +6,17 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addMessageAction } from "../../redux/actions/chatRoomActions";
 
-function ChatRoomBodyComponent({ roomData, userData, selectedRoomIndex }) {
+function ChatRoomBodyComponent({
+  roomData,
+  userData,
+  selectedRoomIndex,
+  setfetchApi,
+  handleScrollIntoView,
+}) {
   const dispatch = useDispatch();
   const { socket } = useSelector((state) => state.user);
 
   const lastMessageReadIndex = {};
-
-  const handleScroll = () => {
-    const element = document.getElementById("intoView");
-    if (element) {
-      // 👇 Will scroll smoothly to the top of the next section
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
 
   // for read feature, last message index that one read
   roomData.messages.forEach((msg, index) => {
@@ -44,7 +42,7 @@ function ChatRoomBodyComponent({ roomData, userData, selectedRoomIndex }) {
       (message, roomId) => {
         dispatch(addMessageAction(message, roomId));
         setTimeout(() => {
-          handleScroll();
+          handleScrollIntoView();
         }, 500);
       }
     );
@@ -52,12 +50,37 @@ function ChatRoomBodyComponent({ roomData, userData, selectedRoomIndex }) {
   };
 
   useEffect(() => {
-    handleScroll();
+    handleScrollIntoView();
   }, [selectedRoomIndex]);
+
+  const handleScroll = (e) => {
+    const chatRoomBody = document.getElementById("chatRoomBody");
+
+    if (chatRoomBody.scrollTop === 0) {
+      setfetchApi((prev) => {
+        const count = prev.count + 1;
+        return { fetch: true, count: count };
+      });
+    }
+  };
+
+  useEffect(() => {
+    const chatRoomBody = document.getElementById("chatRoomBody");
+
+    chatRoomBody.addEventListener("scroll", handleScroll);
+
+    // Step 4 (continued): Remove the scroll event listener when the component is unmounted
+    return () => {
+      chatRoomBody.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div style={{ height: "100vh" }}>
-      <div className="w-100 overflow-y-auto overflow-x-visible position-relative custom-chatRoomHeight">
+      <div
+        id="chatRoomBody"
+        className="w-100 overflow-y-auto overflow-x-visible position-relative custom-chatRoomHeight"
+      >
         {/* Text input */}
         <div
           className="d-flex w-100 rounded align-items-center mb-3 stick-bottom "

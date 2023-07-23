@@ -43,7 +43,7 @@ function LoginPage() {
 
           if (userData.doNotLogout) {
             localStorage.setItem("userData", JSON.stringify(userData));
-            localStorage.setItem("chatRoomsData", JSON.stringify(chatRooms));
+            localStorage.setItem("chatRooms", JSON.stringify(chatRooms));
           } else {
             sessionStorage.setItem("userData", JSON.stringify(userData));
             sessionStorage.setItem("chatRooms", JSON.stringify(chatRooms));

@@ -16,6 +16,12 @@ const chatRoomReducer = (state = initialState, action) => {
         chatRoomsData: action.payload,
       };
     }
+    case chatRoomConstants.LOGOUT: {
+      return {
+        chatRoomsData: [],
+        selectedRoomIndex: -1,
+      };
+    }
     case chatRoomConstants.SELECT_ROOM: {
       return {
         ...state,
@@ -27,6 +33,10 @@ const chatRoomReducer = (state = initialState, action) => {
       const addingRoom = action.payload;
 
       if (state.selectedRoomIndex !== -1) {
+        if (roomsData[state.selectedRoomIndex].messages)
+          addingRoom.messages.push(
+            ...roomsData[state.selectedRoomIndex].messages
+          );
         roomsData[state.selectedRoomIndex] = addingRoom;
       }
 
@@ -35,6 +45,7 @@ const chatRoomReducer = (state = initialState, action) => {
         chatRoomsData: roomsData,
       };
     }
+
     case chatRoomConstants.ADD_MESSAGE: {
       const roomIndex = state.chatRoomsData.findIndex(
         (room) => room._id === action.payload.roomId

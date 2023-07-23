@@ -6,7 +6,10 @@ import { useDispatch } from "react-redux";
 import { userLogoutAction } from "../redux/actions/userActions";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectRoomAction } from "../redux/actions/chatRoomActions";
+import {
+  logoutRoomAction,
+  selectRoomAction,
+} from "../redux/actions/chatRoomActions";
 import { useEffect, useState } from "react";
 
 function ChatListComponent() {
@@ -32,8 +35,10 @@ function ChatListComponent() {
 
   const handleLogout = () => {
     dispatch(userLogoutAction());
+    dispatch(logoutRoomAction());
     navigate("/login");
   };
+
   // console.log(chatRoomsData[selectedRoomIndex]?.messages);
 
   useEffect(() => {
@@ -47,7 +52,7 @@ function ChatListComponent() {
       });
     }
   }, [
-    chatRoomsData[selectedRoomIndex]?.messages.length,
+    chatRoomsData[selectedRoomIndex]?.messages?.length,
     selectedRoomIndex,
     hasFocus,
   ]);
@@ -60,7 +65,6 @@ function ChatListComponent() {
       window.removeEventListener("blur", onBlur);
     };
   }, []);
-  console.log(chatRoomsData);
 
   return (
     <Container fluid>
@@ -115,7 +119,7 @@ function ChatListComponent() {
           // backgroundColor: "blue",
         }}
       >
-        {chatRoomsData.length > 0 &&
+        {chatRoomsData?.length > 0 &&
           chatRoomsData.map((room, index) => {
             const member = room.members.find(
               (member) => userData._id !== member._id

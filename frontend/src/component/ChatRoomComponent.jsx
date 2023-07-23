@@ -10,18 +10,48 @@ function ChatRoomComponent() {
   const { selectedRoomIndex, chatRoomsData } = useSelector(
     (state) => state.chatRoom
   );
+  const [fetchApi, setfetchApi] = useState({ fetch: true, count: 0 });
+
   const { userData } = useSelector((state) => state.user);
   const [room, setRoom] = useState();
 
+  const handleScrollIntoView = () => {
+    const element = document.getElementById("intoView");
+    if (element) {
+      // 👇 Will scroll smoothly to the top of the next section
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
-    if (selectedRoomIndex > -1) {
+    if (selectedRoomIndex > -1 && fetchApi.fetch) {
       const roomId = chatRoomsData[selectedRoomIndex]._id;
-      getChatRoomById(roomId).then((res) => {
+      const messagesCountPerPage = 30;
+      const chatRoomBody = document.getElementById("chatRoomBody");
+      let scrollPosition = null;
+      if (chatRoomBody) {
+        scrollPosition = chatRoomBody.scrollHeight - chatRoomBody.scrollTop;
+      }
+
+      getChatRoomById(
+        roomId,
+        messagesCountPerPage,
+        fetchApi.count * messagesCountPerPage
+      ).then((res) => {
         setRoom(res.data);
         dispatch(addChatRoom(res.data));
+
+        if (scrollPosition) {
+          // to stay where the scrollbar was instead of at the top
+          setTimeout(() => {
+            chatRoomBody.scrollTop = chatRoomBody.scrollHeight - scrollPosition;
+          }, 0.00000000000000000000000000001);
+        }
+        if (fetchApi.count === 0) handleScrollIntoView();
       });
     }
-  }, [selectedRoomIndex]);
+  }, [selectedRoomIndex, fetchApi]);
+
   return (
     <div>
       {selectedRoomIndex > -1 && room && (
@@ -31,6 +61,8 @@ function ChatRoomComponent() {
             roomData={room}
             userData={userData}
             selectedRoomIndex={selectedRoomIndex}
+            setfetchApi={setfetchApi}
+            handleScrollIntoView={handleScrollIntoView}
           />
         </>
       )}

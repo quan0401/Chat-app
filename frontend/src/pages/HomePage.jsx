@@ -1,7 +1,7 @@
 import { Col, Container, Row } from "react-bootstrap";
 import ChatListComponent from "../component/ChatListComponent";
 import ChatRoomComponent from "../component/ChatRoomComponent";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import socketIO from "socket.io-client";
 import { useSelector, useDispatch } from "react-redux";
 import { setSocket, userLoginAction } from "../redux/actions/userActions";
