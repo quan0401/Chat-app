@@ -43,7 +43,7 @@ function ChatRoomBodyComponent({
         dispatch(addMessageAction(message, roomId));
         setTimeout(() => {
           handleScrollIntoView();
-        }, 500);
+        }, 100);
       }
     );
     e.target.value = "";
@@ -113,7 +113,19 @@ function ChatRoomBodyComponent({
                 return acc;
               } else return acc;
             }, []);
-
+            {
+              /* if (index === roomData.messages.length - 1) {
+              return (
+                <MessageComponent
+                  msg={msg}
+                  key={index}
+                  isMe={userData._id === msg.owner._id ? true : false}
+                  readers={readers}
+                  imgUrl="https://res.cloudinary.com/dg3fsapzu/image/upload/v1690181737/chatApp/lbhm8ufivahslswroaoo.jpg"
+                />
+              );
+            } */
+            }
             return (
               <MessageComponent
                 msg={msg}

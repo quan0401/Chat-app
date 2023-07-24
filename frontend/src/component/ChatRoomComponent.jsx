@@ -17,7 +17,24 @@ function ChatRoomComponent() {
 
   const handleScrollIntoView = () => {
     const element = document.getElementById("intoView");
-    if (element) {
+    function checkOverflow() {
+      const chatRoomBody = document.getElementById("chatRoomBody");
+      if (!chatRoomBody) return;
+      var curOverflow = chatRoomBody.style.overflow;
+
+      if (!curOverflow || curOverflow === "visible")
+        chatRoomBody.style.overflow = "hidden";
+
+      var isOverflowing =
+        chatRoomBody.clientWidth < chatRoomBody.scrollWidth ||
+        chatRoomBody.clientHeight < chatRoomBody.scrollHeight;
+
+      chatRoomBody.style.overflow = curOverflow;
+
+      return isOverflowing;
+    }
+
+    if (element && checkOverflow() === true) {
       // 👇 Will scroll smoothly to the top of the next section
       element.scrollIntoView({ behavior: "smooth" });
     }

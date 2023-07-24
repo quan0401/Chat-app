@@ -5,6 +5,7 @@ function MessageComponent({
   inGroup = false,
   readers = [],
   msg,
+  imgUrl = "",
 }) {
   const justifyContentValue = !isMe ? "start" : "end";
   return (
@@ -31,20 +32,32 @@ function MessageComponent({
         style={{
           borderRadius: 40,
           marginRight: 20,
+          backgroundColor: !imgUrl ? "" : "transparent",
         }}
         className={
           isMe ? " my-bg-primary-color p-2 px-3" : "my-bg-third-color p-2 px-3"
         }
       >
-        <p
-          style={{
-            maxWidth: "400px",
-            wordBreak: "break-all",
-          }}
-          className="my-text-primary m-0"
-        >
-          {msg?.content}
-        </p>
+        {imgUrl ? (
+          <Image
+            src={imgUrl}
+            style={{
+              maxHeight: "24vh",
+              maxWidth: "30vw",
+              borderRadius: 20,
+            }}
+          />
+        ) : (
+          <p
+            style={{
+              maxWidth: "400px",
+              wordBreak: "break-all",
+            }}
+            className="my-text-primary m-0"
+          >
+            {msg?.content}
+          </p>
+        )}
       </div>
       {readers.length > 0 && (
         <div
