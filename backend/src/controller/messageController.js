@@ -1,5 +1,6 @@
 const ChatRoom = require("../models/ChatRoomModel");
 const Message = require("../models/MessageModel");
+const { handleUploadImageCloudinary } = require("../utils/cloudinary");
 
 const createMessage = async (req, res, next) => {
   try {
@@ -30,4 +31,25 @@ const createMessage = async (req, res, next) => {
   }
 };
 
-module.exports = { createMessage };
+const uploadImageController = async (req, res, next) => {
+  try {
+    const b64 = Buffer.from(req.file.buffer).toString("base64");
+    let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+    const cldRes = await handleUploadImageCloudinary(dataURI);
+
+    res.json(cldRes);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteAllMessages = async (req, res, next) => {
+  try {
+    const result = await Message.deleteMany();
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { createMessage, uploadImageController, deleteAllMessages };

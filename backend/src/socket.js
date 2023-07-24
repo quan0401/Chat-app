@@ -16,14 +16,16 @@ const socketIO = () => {
 
     socket.on(
       "User sends message",
-      async ({ senderId, content, roomId, receivers }, cb) => {
+      async ({ senderId, content, roomId, receivers, imgUrl }, cb) => {
         try {
           const foundChatRoom = await ChatRoom.findById(roomId).orFail();
+          if (imgUrl) content = "";
 
           let message = await Message.create({
             content: content,
             owner: senderId,
             read: [senderId],
+            imgUrl,
           });
 
           foundChatRoom.lastMessage = message._id;

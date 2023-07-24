@@ -5,7 +5,6 @@ const ChatRoom = require("../models/ChatRoomModel");
 const getChatRoomById = async (req, res, next) => {
   try {
     const { id: roomId } = req.params;
-    console.log(req.query);
     const limit = req.query.limit || 5;
     const skip = req.query.skip || 5;
     if (!roomId) return res.status(400).send("Missing roomId");
@@ -54,4 +53,15 @@ const getChatRoomById = async (req, res, next) => {
   }
 };
 
-module.exports = { getChatRoomById };
+const clearAllMessagesInChatRoom = async (req, res, next) => {
+  try {
+    const room = await ChatRoom.findById(req.params.id);
+    room.messages = [];
+    const result = await room.save();
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getChatRoomById, clearAllMessagesInChatRoom };

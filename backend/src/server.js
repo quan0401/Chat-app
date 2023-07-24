@@ -7,8 +7,8 @@ const bodyParser = require("body-parser");
 const socketIO = require("./socket");
 
 const app = express();
-// socket
 
+// socket
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const httpServer = createServer(app);

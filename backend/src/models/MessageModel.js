@@ -4,8 +4,9 @@ const { Schema } = mongoose;
 const messageSchema = new Schema(
   {
     owner: { type: Schema.Types.ObjectId, ref: "User", required: true }, // String is shorthand for {type: String}
-    content: { type: String, required: true },
+    content: { type: String },
     read: [{ type: Schema.Types.ObjectId, ref: "User", unique: true }],
+    imgUrl: { type: String },
   },
   {
     timestamps: true,

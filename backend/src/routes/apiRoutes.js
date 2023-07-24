@@ -2,9 +2,11 @@ require("dotenv").config();
 const { verify } = require("jsonwebtoken");
 const userRoutes = require("./userRoutes");
 const express = require("express");
-const app = express();
 const chatRoomRoutes = require("./chatRoomRoutes");
 const messageRoutes = require("./messageRoute");
+const { verifyIsLoggedIn } = require("../middleware/verifyAuthToken");
+
+const app = express();
 
 app.get("/logout", (req, res, next) => {
   return res
@@ -30,7 +32,11 @@ app.get("/get-token", (req, res, next) => {
 });
 
 app.use("/user", userRoutes);
+
+app.use(verifyIsLoggedIn);
+
 app.use("/chatRoom", chatRoomRoutes);
+
 app.use("/message", messageRoutes);
 
 module.exports = app;

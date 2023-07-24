@@ -1,5 +1,8 @@
 const express = require("express");
-const { getChatRoomById } = require("../controller/chatRoomController");
+const {
+  getChatRoomById,
+  clearAllMessagesInChatRoom,
+} = require("../controller/chatRoomController");
 const { verifyIsLoggedIn } = require("../middleware/verifyAuthToken");
 const { updateToRead } = require("../service/messageServices");
 const ChatRoom = require("../models/ChatRoomModel");
@@ -10,6 +13,7 @@ const chatRoomRoutes = express.Router();
 chatRoomRoutes.use(verifyIsLoggedIn);
 
 chatRoomRoutes.get("/:id", getChatRoomById);
+chatRoomRoutes.delete("/:id", clearAllMessagesInChatRoom);
 
 chatRoomRoutes.post("/test", async (req, res, next) => {
   try {
